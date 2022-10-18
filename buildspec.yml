@@ -1,0 +1,31 @@
+version: 0.2
+
+run-as: root
+
+env:
+  parameter-store:
+            DB_HOST: "/rachit/DB_HOST"
+            DB_NAME: "/rachit/DB_NAME"
+            DB_USER: "/rachit/DB_USER"
+            DB_PASSWORD: "/rachit/DB_PASSWORD"
+            
+
+phases:
+   pre_build:
+     commands:
+       - echo "Pre build step executing"
+       - apt update -y
+       - echo "Installing Nginx and php"
+       - apt install nginx -y
+       - apt install php php-fpm -y
+       - echo "Installed pre_build commands"
+
+   build:
+     commands:
+        - sed -i 's/password_here/'$DB_PASSWORD'/' wp-config.php
+       
+
+artifacts:
+  files:
+    - echo "Upload artifact to bucket for deploy"
+    - '**/*'
